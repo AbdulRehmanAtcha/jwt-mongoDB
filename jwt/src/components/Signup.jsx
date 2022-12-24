@@ -12,7 +12,7 @@ const Signup = () => {
       baseURL = `http://localhost:5001`;
     }
     else {
-      baseURL = `https://spring-bud-pike-coat.cyclic.app`;
+      baseURL = `https://spring-bud-pike-coat.cyclic.app` || `https://spring-bud-pike-coat.cyclic.app/signup`;
     }
     const [fName, setFName] = useState("");
     const [lName, setLName] = useState("");
