@@ -7,7 +7,13 @@ import axios from 'axios';
 
 
 const Signup = () => {
-    const baseURL = 'http://localhost:5001' 
+    let baseURL = "";
+    if (window.location.href.split(":")[0] === "http") {
+      baseURL = `http://localhost:5001`;
+    }
+    else {
+      baseURL = `https://spring-bud-pike-coat.cyclic.app`;
+    }
     const [fName, setFName] = useState("");
     const [lName, setLName] = useState("");
     const [email, setEmail] = useState("");
