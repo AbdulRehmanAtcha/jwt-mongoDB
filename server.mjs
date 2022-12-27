@@ -192,6 +192,10 @@ app.post("/logout", (req, res) => {
     res.send({ message: "Logout successful" });
 })
 
+app.post("/home", (req,res)=>{
+    res.send("It is Home");
+})
+
 
 
 

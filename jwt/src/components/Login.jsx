@@ -2,7 +2,8 @@ import React from 'react'
 import './login.css';
 import drop from '../icons/blood-drop.png'
 import { NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from "react";
+import { GlobalContext } from '../context/Context';
 import axios from 'axios';
 
 let baseURL = "";
@@ -20,7 +21,7 @@ const Login = () => {
 
 
 
-
+  let { state, dispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,7 +40,11 @@ const Login = () => {
       }, {
         withCredentials: true
       })
-      console.log("Login Successful");
+      dispatch({
+        type: 'USER_LOGIN',
+        payload: null
+    })
+      console.log("Login Successful", email);
       alert("Login Successful");
     }
     catch (e) {
