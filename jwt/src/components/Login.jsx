@@ -41,7 +41,7 @@ const Login = () => {
         withCredentials: true
       })
       dispatch({
-        type: 'USER_LOGIN',
+        type: "USER_LOGIN",
         payload: null
     })
       console.log("Login Successful", email);

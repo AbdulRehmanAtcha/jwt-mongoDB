@@ -29,9 +29,14 @@ function App() {
         dispatch({
           type: "USER_LOGIN"
         })
+        console.log("Yes Login");
       }
       catch(error){
         console.log(error);
+        console.log("no Login");
+        dispatch({
+          type: 'USER_LOGOUT'
+        })
       }
     }
     getHome();
@@ -52,7 +57,8 @@ function App() {
               Home.
               <br />
               <button onClick={logoutHandler} style={{width: "160px", height: "60px", backgroundColor: "white", border: "none", marginTop: "10px"}}>Logout</button>
-            </h2>} />
+            </h2>
+          } />
           </Routes>
 
           :
@@ -67,6 +73,7 @@ function App() {
           :
           null
       }
+      
       {
         (state.isLogin === null) ?
           <Routes>
