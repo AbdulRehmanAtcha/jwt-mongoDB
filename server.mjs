@@ -203,12 +203,12 @@ app.post("/logout", (req, res) => {
 app.use((req, res, next) => {
     console.log("req.cookies: ", req.cookies);
   
-    if (!req?.cookies?.Token) {
-      res.status(401).send({
-        message: "include http-only credentials with every request",
-      });
-      return;
-    }
+    // if (!req?.cookies?.Token) {
+    //   res.status(401).send({
+    //     message: "include http-only credentials with every request",
+    //   });
+    //   return;
+    // }
   
     jwt.verify(req.cookies.Token, SECRET, function (err, decodedData) {
       if (!err) {
