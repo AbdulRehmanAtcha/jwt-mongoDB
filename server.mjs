@@ -42,6 +42,14 @@ const userSchema = new mongoose.Schema({
 });
 const userModel = mongoose.model('Users', userSchema);
 
+let productSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    price: Number,
+    description: String,
+    createdOn: { type: Date, default: Date.now }
+});
+const productModel = mongoose.model('products', productSchema); 
+
 app.post("/signup", (req, res) => {
 
     let body = req.body;
@@ -191,6 +199,41 @@ app.post("/logout", (req, res) => {
 
     res.send({ message: "Logout successful" });
 })
+
+app.use((req, res, next) => {
+    console.log("req.cookies: ", req.cookies);
+  
+    if (!req?.cookies?.Token) {
+      res.status(401).send({
+        message: "include http-only credentials with every request",
+      });
+      return;
+    }
+  
+    jwt.verify(req.cookies.Token, SECRET, function (err, decodedData) {
+      if (!err) {
+        console.log("decodedData: ", decodedData);
+  
+        const nowDate = new Date().getTime() / 1000;
+  
+        if (decodedData.exp < nowDate) {
+          res.status(401);
+          res.cookie("Token", "", {
+            maxAge: 1,
+            httpOnly: true,
+          });
+          res.send({ message: "token expired" });
+        } else {
+          console.log("token approved");
+  
+          req.body.token = decodedData;
+          next();
+        }
+      } else {
+        res.status(401).send("invalid token");
+      }
+    });
+  });
 
 app.post("/home", (req,res)=>{
     res.send("It is Home");
