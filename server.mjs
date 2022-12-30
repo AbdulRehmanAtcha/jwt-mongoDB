@@ -18,16 +18,17 @@ const MongoDBURI = process.env.MongoDBURI || "mongodb+srv://abdul:abdulpassword@
 
 app.use(cors({
     origin: [
-      "http://localhost:3000",
-    //   "http://localhost:3000/signup",
-    //   "http://localhost:3000/login",
-    //   "https://spring-bud-pike-coat.cyclic.app",
-    //   "https://spring-bud-pike-coat.cyclic.app/signup",
-    //   "https://spring-bud-pike-coat.cyclic.app/login",
-      "*",
+        "http://localhost:3000",
+        //   "http://localhost:3000/signup",
+        //   "http://localhost:3000/login",
+        //   "https://spring-bud-pike-coat.cyclic.app",
+        //   "https://spring-bud-pike-coat.cyclic.app/signup",
+        //   "https://spring-bud-pike-coat.cyclic.app/login",
+        "*",
     ],
     credentials: true,
-  }));
+    origin: true,
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -48,9 +49,9 @@ let productSchema = new mongoose.Schema({
     description: String,
     createdOn: { type: Date, default: Date.now }
 });
-const productModel = mongoose.model('products', productSchema); 
+const productModel = mongoose.model('products', productSchema);
 
-app.post("/signup", (req, res) => {
+app.post("/api/v1/signup", (req, res) => {
 
     let body = req.body;
 
@@ -114,7 +115,7 @@ app.post("/signup", (req, res) => {
     })
 });
 
-app.post("/login", (req, res) => {
+app.post("/api/v1/login", (req, res) => {
 
     let body = req.body;
     body.email = body.email.toLowerCase();
@@ -156,7 +157,9 @@ app.post("/login", (req, res) => {
 
                             res.cookie('Token', token, {
                                 maxAge: 86_400_000,
-                                httpOnly: true
+                                httpOnly: true,
+                                sameSite: 'none',
+                                secure: true,
                             });
 
                             res.send({
@@ -190,57 +193,59 @@ app.post("/login", (req, res) => {
         })
 })
 
-app.post("/logout", (req, res) => {
+app.post("/api/v1/logout", (req, res) => {
 
     res.cookie('Token', '', {
-        maxAge: 1,
-        httpOnly: true
+        maxAge: 0,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
     });
 
     res.send({ message: "Logout successful" });
 })
 
-app.use((req, res, next) => {
+app.use("/api/v1",(req, res, next) => {
     console.log("req.cookies: ", req.cookies);
-  
-    if (!req?.cookies?.Token) {
-      res.status(401).send({
-        message: "include http-only credentials with every request",
-      });
-      return;
-    }
-  
-    jwt.verify(req.cookies.Token, SECRET, function (err, decodedData) {
-      if (!err) {
-        console.log("decodedData: ", decodedData);
-  
-        const nowDate = new Date().getTime() / 1000;
-  
-        if (decodedData.exp < nowDate) {
-          res.status(401);
-          res.cookie("Token", "", {
-            maxAge: 1,
-            httpOnly: true,
-          });
-          res.send({ message: "token expired" });
-        } else {
-          console.log("token approved");
-  
-          req.body.token = decodedData;
-          next();
-        }
-      } else {
-        res.status(401).send("invalid token");
-      }
-    });
-  });
 
-app.post("/home", (req,res)=>{
+    if (!req?.cookies?.Token) {
+        res.status(401).send({
+            message: "include http-only credentials with every request",
+        });
+        return;
+    }
+
+    jwt.verify(req.cookies.Token, SECRET, function (err, decodedData) {
+        if (!err) {
+            console.log("decodedData: ", decodedData);
+
+            const nowDate = new Date().getTime() / 1000;
+
+            if (decodedData.exp < nowDate) {
+                res.status(401);
+                res.cookie("Token", "", {
+                    maxAge: 1,
+                    httpOnly: true,
+                    sameSite: 'none',
+                    secure: true,
+                });
+                res.send({ message: "token expired" });
+            } else {
+                console.log("token approved");
+
+                req.body.token = decodedData;
+                next();
+            }
+        } else {
+            res.status(401).send("invalid token");
+        }
+    });
+});
+
+
+app.post("/api/v1/home", (req, res) => {
     res.send("It is Home");
 })
-
-
-
 
 
 const __dirname = path.resolve();
@@ -249,8 +254,12 @@ app.use('/', express.static(path.join(__dirname, './jwt/build')))
 app.use('*', express.static(path.join(__dirname, './jwt/build')))
 
 
+
+
+
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
 
 

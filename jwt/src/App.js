@@ -9,22 +9,16 @@ import { GlobalContext } from './context/Context';
 import { useContext } from "react";
 import { useEffect } from 'react';
 
-let baseURL = "";
-if (window.location.href.split(":")[0] === "http") {
-  baseURL = `http://localhost:5001`;
-}
-else {
-  baseURL = `https://spring-bud-pike-coat.cyclic.app`;
-}
+let baseUrl = "http://localhost:5001/api/v1";
 
 function App() {
   let { state, dispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    {(window.location.href.split(":")[0] === "http") ? baseURL = `http://localhost:5001` : baseURL = `https://spring-bud-pike-coat.cyclic.app`}
+    
     const getHome = async () => {
       try {
-        let response = await axios.get(`${baseURL}/home`, {
+        let response = await axios.get(`${baseUrl}/home`, {
           withCredentials: true
         })
         dispatch({
@@ -44,10 +38,20 @@ function App() {
 
   }, [])
 
-  const logoutHandler = () => {
-    dispatch({
-      type: "USER_LOGOUT"
-    })
+  const logoutHandler = async() => {
+    
+    try {
+        let response = await axios.post(`${baseUrl}/logout`, {
+          withCredentials: true
+        })
+        dispatch({
+          type: "USER_LOGOUT"
+        })
+        console.log("Yes Login");
+      }
+      catch (error) {
+        console.log(error);
+      }
   }
   return (
     <body>

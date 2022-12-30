@@ -6,13 +6,7 @@ import { useState, useContext } from "react";
 import { GlobalContext } from '../context/Context';
 import axios from 'axios';
 
-let baseURL = "";
-if (window.location.href.split(":")[0] === "http") {
-  baseURL = `http://localhost:5001`;
-}
-else {
-  baseURL = `https://spring-bud-pike-coat.cyclic.app`;
-} 
+const baseUrl = "http://localhost:5001/api/v1";
 
 
 const Login = () => {
@@ -21,7 +15,7 @@ const Login = () => {
 
 
 
-  let { state, dispatch } = useContext(GlobalContext);
+  let { state, dispatch } = useContext(GlobalContext);  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,7 +28,7 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      let response = await axios.post(`${baseURL}/login`, {
+      let response = await axios.post(`${baseUrl}/login`, {
         email: email,
         password: password
       }, {
