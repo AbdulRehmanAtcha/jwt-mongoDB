@@ -53,7 +53,6 @@ function App() {
         dispatch({
           type: "USER_LOGOUT"
         })
-        console.log("Yes Login");
       }
       catch (error) {
         console.log(error);
