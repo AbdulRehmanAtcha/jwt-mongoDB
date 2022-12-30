@@ -9,7 +9,13 @@ import { GlobalContext } from './context/Context';
 import { useContext } from "react";
 import { useEffect } from 'react';
 
-let baseUrl = "http://localhost:5001/api/v1";
+let baseURL = "";
+if (window.location.href.split(":")[0] === "http") {
+  baseURL = `http://localhost:5001/api/v1`;
+}
+else {
+  baseURL = `https://spring-bud-pike-coat.cyclic.app/api/v1`;
+}
 
 function App() {
   let { state, dispatch } = useContext(GlobalContext);
@@ -18,7 +24,7 @@ function App() {
     
     const getHome = async () => {
       try {
-        let response = await axios.get(`${baseUrl}/home`, {
+        let response = await axios.get(`${baseURL}/home`, {
           withCredentials: true
         })
         dispatch({
@@ -41,7 +47,7 @@ function App() {
   const logoutHandler = async() => {
     
     try {
-        let response = await axios.post(`${baseUrl}/logout`, {
+        let response = await axios.post(`${baseURL}/logout`, {
           withCredentials: true
         })
         dispatch({

@@ -6,7 +6,13 @@ import { useState, useContext } from "react";
 import { GlobalContext } from '../context/Context';
 import axios from 'axios';
 
-const baseUrl = "http://localhost:5001/api/v1";
+let baseURL = "";
+if (window.location.href.split(":")[0] === "http") {
+  baseURL = `http://localhost:5001/api/v1`;
+}
+else {
+  baseURL = `https://spring-bud-pike-coat.cyclic.app/api/v1`;
+}
 
 
 const Login = () => {
@@ -28,7 +34,7 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      let response = await axios.post(`${baseUrl}/login`, {
+      let response = await axios.post(`${baseURL}/login`, {
         email: email,
         password: password
       }, {

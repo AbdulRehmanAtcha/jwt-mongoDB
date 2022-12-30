@@ -5,7 +5,13 @@ import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
-const baseUrl = "http://localhost:5001/api/v1";
+let baseURL = "";
+if (window.location.href.split(":")[0] === "http") {
+  baseURL = `http://localhost:5001/api/v1`;
+}
+else {
+  baseURL = `https://spring-bud-pike-coat.cyclic.app/api/v1`;
+}
 
 
 const Signup = () => {
@@ -32,7 +38,7 @@ const Signup = () => {
     const signupHandler = async(e)=>{
         e.preventDefault();
         try{
-            let response = await axios.post(`${baseUrl}/signup`,{
+            let response = await axios.post(`${baseURL}/signup`,{
                 firstName: fName,
                 lastName: lName,
                 email: email,
