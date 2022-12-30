@@ -19,11 +19,11 @@ const MongoDBURI = process.env.MongoDBURI || "mongodb+srv://abdul:abdulpassword@
 app.use(cors({
     origin: [
       "http://localhost:3000",
-      "http://localhost:3000/signup",
-      "http://localhost:3000/login",
-      "https://spring-bud-pike-coat.cyclic.app",
-      "https://spring-bud-pike-coat.cyclic.app/signup",
-      "https://spring-bud-pike-coat.cyclic.app/login",
+    //   "http://localhost:3000/signup",
+    //   "http://localhost:3000/login",
+    //   "https://spring-bud-pike-coat.cyclic.app",
+    //   "https://spring-bud-pike-coat.cyclic.app/signup",
+    //   "https://spring-bud-pike-coat.cyclic.app/login",
       "*",
     ],
     credentials: true,

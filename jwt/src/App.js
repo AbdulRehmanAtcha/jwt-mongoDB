@@ -21,9 +21,10 @@ function App() {
   let { state, dispatch } = useContext(GlobalContext);
 
   useEffect(() => {
+    {(window.location.href.split(":")[0] === "http") ? baseURL = `http://localhost:5001` : baseURL = `https://spring-bud-pike-coat.cyclic.app`}
     const getHome = async () => {
       try {
-        let response = await axios.post(`${baseURL}/home`, {
+        let response = await axios.get(`${baseURL}/home`, {
           withCredentials: true
         })
         dispatch({
@@ -31,7 +32,7 @@ function App() {
         })
         console.log("Yes Login");
       }
-      catch(error){
+      catch (error) {
         console.log(error);
         console.log("no Login");
         dispatch({
@@ -43,7 +44,7 @@ function App() {
 
   }, [])
 
-  const logoutHandler = ()=>{
+  const logoutHandler = () => {
     dispatch({
       type: "USER_LOGOUT"
     })
@@ -56,9 +57,9 @@ function App() {
             <Route path='/' element={<h2 style={{ color: "white" }}>
               Home.
               <br />
-              <button onClick={logoutHandler} style={{width: "160px", height: "60px", backgroundColor: "white", border: "none", marginTop: "10px"}}>Logout</button>
+              <button onClick={logoutHandler} style={{ width: "160px", height: "60px", backgroundColor: "white", border: "none", marginTop: "10px" }}>Logout</button>
             </h2>
-          } />
+            } />
           </Routes>
 
           :
@@ -73,7 +74,7 @@ function App() {
           :
           null
       }
-      
+
       {
         (state.isLogin === null) ?
           <Routes>
