@@ -193,15 +193,14 @@ app.post("/api/v1/login", (req, res) => {
         })
 })
 
-app.post("/api/v1/logout", (req, res) => {
+app.post('/api/v1/logout', (req, res) => {
+
 
     res.cookie('Token', '', {
-        maxAge: 0,
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: true
     });
-
     res.send({ message: "Logout successful" });
 })
 

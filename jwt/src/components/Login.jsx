@@ -8,10 +8,10 @@ import axios from 'axios';
 
 let baseURL = "";
 if (window.location.href.split(":")[0] === "http") {
-  baseURL = `http://localhost:5001/api/v1`;
+  baseURL = `http://localhost:5001`;
 }
 else {
-  baseURL = `https://spring-bud-pike-coat.cyclic.app/api/v1`;
+  baseURL = `https://spring-bud-pike-coat.cyclic.app`;
 }
 
 
@@ -34,7 +34,7 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      let response = await axios.post(`${baseURL}/login`, {
+      let response = await axios.post(`${baseURL}/api/v1/login`, {
         email: email,
         password: password
       }, {

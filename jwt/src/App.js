@@ -11,10 +11,10 @@ import { useEffect } from 'react';
 
 let baseURL = "";
 if (window.location.href.split(":")[0] === "http") {
-  baseURL = `http://localhost:5001/api/v1`;
+  baseURL = `http://localhost:5001`;
 }
 else {
-  baseURL = `https://spring-bud-pike-coat.cyclic.app/api/v1`;
+  baseURL = `https://spring-bud-pike-coat.cyclic.app`;
 }
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
     
     const getHome = async () => {
       try {
-        let response = await axios.get(`${baseURL}/home`, {
+        let response = await axios.get(`${baseURL}/api/v1/home`, {
           withCredentials: true
         })
         dispatch({
@@ -47,7 +47,9 @@ function App() {
   const logoutHandler = async() => {
     
     try {
-        let response = await axios.post(`${baseURL}/logout`, {
+        let response = await axios.post(`${baseURL}/api/v1/logout`, 
+        {},
+        {
           withCredentials: true
         })
         dispatch({
