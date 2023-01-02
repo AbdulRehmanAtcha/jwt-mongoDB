@@ -21,7 +21,7 @@ function App() {
   let { state, dispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    
+
     const getHome = async () => {
       try {
         let response = await axios.get(`${baseURL}/api/v1/home`, {
@@ -44,21 +44,20 @@ function App() {
 
   }, [])
 
-  const logoutHandler = async() => {
-    
+  const logoutHandler = async () => {
     try {
-        let response = await axios.post(`${baseURL}/api/v1/logout`, 
-        {},
+      let response = await axios.post(`${baseURL}/api/v1/logout`,
         {
           withCredentials: true
         })
-        dispatch({
-          type: "USER_LOGOUT"
-        })
-      }
-      catch (error) {
-        console.log(error);
-      }
+      console.log("res", response);
+      dispatch({
+        type: 'USER_LOGOUT'
+      })
+    }
+    catch (e) {
+      console.log("e: ", e);
+    }
   }
   return (
     <body>
