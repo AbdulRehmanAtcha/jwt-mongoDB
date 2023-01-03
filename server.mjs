@@ -51,6 +51,8 @@ let productSchema = new mongoose.Schema({
 });
 const productModel = mongoose.model('products', productSchema);
 
+let products = [];
+
 app.post("/api/v1/signup", (req, res) => {
 
     let body = req.body;
@@ -242,10 +244,159 @@ app.use("/api/v1",(req, res, next) => {
     });
 });
 
+app.post('/api/v1/product', (req,res)=>{
+    const body = req.body;
 
-app.post("/api/v1/home", (req, res) => {
-    res.send("It is Home");
+    if(!body.name || !body.price || !body.description){
+        res.status(404);
+        res.send({
+            message: "All Inputs Are Required"
+        });
+        return;
+    }
+    // products.push(
+    //     {
+    //         id: new Date().getTime(), 
+    //         name: body.name,
+    //         price: body.price,
+    //         description: body.description
+
+    //     }
+    // )
+
+    productModel.create({
+        name: body.name,
+        price: body.price,
+        description: body.description,
+    },
+        (err, saved) => {
+            if (!err) {
+                console.log(saved);
+
+                res.send({
+                    message: "your product is saved"
+                })
+            } else {
+                console.log("Not Gone");
+                res.status(500).send({
+                    message: "server error"
+                })
+            }       
+        })
+
+    // res.send({
+    //     message: "Product Added Successfully!",
+    //     data: products
+    // });
 })
+app.get('/api/v1/products', (req, res) => {
+
+    productModel.find({}, (err, data) => {
+        if (!err) {
+            res.send({
+                message: "got all products successfully",
+                data: data
+            })
+        } else {
+            res.status(500).send({
+                message: "server error"
+            })
+        }
+    });
+})
+
+app.get('/api/v1/product/:id', (req, res)=>{
+    const id = req.params.id;
+    productModel.findOne({_id: id}, (err,data)=>{
+        if(!err){
+            if(data){
+                res.send({
+                    message: `Product Found ${data._id}`,
+                    data: data
+                });
+
+            }
+            else{
+                res.status(404).send({
+                    message: "Product Not Found",
+                })
+            }
+        }
+        else{
+            res.status(500).send({
+                message: "Server Error",
+            })
+        }
+    })
+})
+
+app.delete('/api/v1/product/:id', (req, res) => {
+    const id = req.params.id;
+
+    productModel.deleteOne({ _id: id }, (err, deletedData) => {
+        console.log("deleted: ", deletedData);
+        if (!err) {
+
+            if (deletedData.deletedCount !== 0) {
+                res.send({
+                    message: "Product Deleted Successfully!"
+                });
+            } else {
+                res.status(404);
+                res.send({
+                    message:"Could't Find This Product"
+                });
+            }
+        } else {
+            res.status(500).send({
+                message: "server error"
+            })
+        }
+    });
+})
+
+app.put('/api/v1/product/:editId', async (req, res) => {
+
+    const body = req.body;
+    const id = req.params.editId;
+
+    if ( // validation
+    !body.name
+    && !body.price
+    && !body.description
+    ) {
+        res.status(400).send({
+            message: "required parameters missing"
+        });
+        return;
+    }
+
+    try {
+        let data = await productModel.findByIdAndUpdate(id,
+            {
+                name: body.name,
+                price: body.price,
+                description: body.description
+            },
+            { new: true }
+        ).exec();
+
+        console.log('updated: ', data);
+
+        res.send({
+            message: "product modified successfully"
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: "server error"
+        })
+    }
+})
+
+
+
+
 
 
 const __dirname = path.resolve();
@@ -262,13 +413,7 @@ app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
-
-
-
-
 mongoose.connect(MongoDBURI);
-
-
 
 mongoose.connection.on('connected', function () {
     console.log("Mongoose is connected");

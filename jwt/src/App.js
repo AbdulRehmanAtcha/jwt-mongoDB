@@ -8,6 +8,7 @@ import {
 import { GlobalContext } from './context/Context';
 import { useContext } from "react";
 import { useEffect } from 'react';
+import Home from './components/Home';
 
 let baseURL = "";
 if (window.location.href.split(":")[0] === "http") {
@@ -24,7 +25,7 @@ function App() {
 
     const getHome = async () => {
       try {
-        let response = await axios.get(`${baseURL}/api/v1/home`, {
+        let response = await axios.get(`${baseURL}/api/v1/products`, {
           withCredentials: true
         })
         dispatch({
@@ -44,34 +45,13 @@ function App() {
 
   }, [])
 
-  const logoutHandler = async () => {
-    try {
-      let response = await axios.post(`${baseURL}/api/v1/logout`,
-        {
-          withCredentials: true
-        })
-      console.log("res", response);
-      dispatch({
-        type: 'USER_LOGOUT'
-      })
-    }
-    catch (e) {
-      console.log("e: ", e);
-    }
-  }
   return (
     <body>
       {
         (state.isLogin === true) ?
           <Routes>
-            <Route path='/' element={<h2 style={{ color: "white" }}>
-              Home.
-              <br />
-              <button onClick={logoutHandler} style={{ width: "160px", height: "60px", backgroundColor: "white", border: "none", marginTop: "10px" }}>Logout</button>
-            </h2>
-            } />
+            <Route path='/' element={<Home/>} />
           </Routes>
-
           :
           null
       }
