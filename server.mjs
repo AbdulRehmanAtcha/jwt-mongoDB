@@ -200,14 +200,14 @@ app.post("/api/v1/logout", (req, res) => {
     res.cookie('Token', '', {
         maxAge: 1,
         httpOnly: true,
-        sameSite:'none',
+        sameSite: 'none',
         secure: true
     });
 
     res.send({ message: "Logout successful" });
 })
 
-app.use("/api/v1",(req, res, next) => {
+app.use("/api/v1", (req, res, next) => {
     console.log("req.cookies: ", req.cookies);
 
     if (!req?.cookies?.Token) {
@@ -244,10 +244,10 @@ app.use("/api/v1",(req, res, next) => {
     });
 });
 
-app.post('/api/v1/product', (req,res)=>{
+app.post('/api/v1/product', (req, res) => {
     const body = req.body;
 
-    if(!body.name || !body.price || !body.description){
+    if (!body.name || !body.price || !body.description) {
         res.status(404);
         res.send({
             message: "All Inputs Are Required"
@@ -281,7 +281,7 @@ app.post('/api/v1/product', (req,res)=>{
                 res.status(500).send({
                     message: "server error"
                 })
-            }       
+            }
         })
 
     // res.send({
@@ -289,40 +289,45 @@ app.post('/api/v1/product', (req,res)=>{
     //     data: products
     // });
 })
-app.get('/api/v1/products', (req, res) => {
 
-    productModel.find({}, (err, data) => {
-        if (!err) {
-            res.send({
-                message: "got all products successfully",
-                data: data
-            })
-        } else {
-            res.status(500).send({
-                message: "server error"
-            })
-        }
-    });
+app.get('/api/v1/products', async (req, res) => {
+    try {
+        const data = await productModel.find({})
+            // .select({description: 0, name: 0}) // projection
+            .sort({ _id: -1 })
+            .exec();
+
+        res.send({
+            message: "Got All Products",
+            data: data
+        })
+    } catch (e) {
+        console.log(e);
+        res.status(500).send({
+            message: "server error"
+        })
+    }
 })
 
-app.get('/api/v1/product/:id', (req, res)=>{
+
+app.get('/api/v1/product/:id', (req, res) => {
     const id = req.params.id;
-    productModel.findOne({_id: id}, (err,data)=>{
-        if(!err){
-            if(data){
+    productModel.findOne({ _id: id }, (err, data) => {
+        if (!err) {
+            if (data) {
                 res.send({
                     message: `Product Found ${data._id}`,
                     data: data
                 });
 
             }
-            else{
+            else {
                 res.status(404).send({
                     message: "Product Not Found",
                 })
             }
         }
-        else{
+        else {
             res.status(500).send({
                 message: "Server Error",
             })
@@ -344,7 +349,7 @@ app.delete('/api/v1/product/:id', (req, res) => {
             } else {
                 res.status(404);
                 res.send({
-                    message:"Could't Find This Product"
+                    message: "Could't Find This Product"
                 });
             }
         } else {
@@ -361,9 +366,9 @@ app.put('/api/v1/product/:editId', async (req, res) => {
     const id = req.params.editId;
 
     if ( // validation
-    !body.name
-    && !body.price
-    && !body.description
+        !body.name
+        && !body.price
+        && !body.description
     ) {
         res.status(400).send({
             message: "required parameters missing"
