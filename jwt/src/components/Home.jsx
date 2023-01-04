@@ -90,14 +90,14 @@ function Home() {
         setLoading(true)
 
         try {
-            setLoading(false)
+            // setLoading(false)
             const response = await axios.delete(`${baseURL}/api/v1/product/${id}`)
             console.log("Got All Products", response.data.data);
             allPosts();
         }
 
         catch (error) {
-            setLoading(false)
+            // setLoading(false)
             console.log("Error", error);
         }
     }
@@ -121,13 +121,13 @@ function Home() {
             description: newDesc,
         })
             .then((response) => {
-                setLoading(false)
+                // setLoading(false)
 
                 console.log(response);
                 allPosts();
 
             }, (error) => {
-                setLoading(false)
+                // setLoading(false)
 
                 console.log(error);
             });
@@ -194,15 +194,17 @@ function Home() {
                                     <button type='submit'>ADD</button>
                                 </form>
                             </div>
-                            <div className={showEdit ? "edit show" : "edit hide"}>
-                                <form onSubmit={updateHandler}>
+                            <div className="edit-box">
+                                <div className={showEdit ? "editshow" : "edithide"} id="edit">
+                                    <form onSubmit={updateHandler}>
                                     <input type="text" onChange={editNameHandler} placeholder="New Name" />
 
                                     <input type="number" placeholder="New Price" onChange={editPriceHandler} />
 
-                                    <textarea cols="50" rows="8" onChange={editDescHandler}></textarea>
+                                    <textarea cols="50" rows="6" onChange={editDescHandler}></textarea>
                                     <button type='submit'>Update</button>
                                 </form>
+                                </div>
                             </div>
                         </div>
 

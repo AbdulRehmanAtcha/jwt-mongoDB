@@ -66,13 +66,11 @@
     position: absolute;
 }
 
-.hide-add,
-.hide-edit {
+.hide-add {
     transform: translateY(-1000px);
 }
 
-.show-add,
-.show-edit {
+.show-add {
     transform: translateY(25px);
 }
 
@@ -114,37 +112,8 @@
     display: none;
 }
 
-.edit form {
-    right: 40%;
-    position: absolute;
-    background-color: #aaaaaa;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    row-gap: 15px;
-    height: 400px;
-    width: 400px;
-    /* bottom: px; */
-    bottom: 450px;
-}
 
-.edit form input {
-    width: 97%;
-    height: 35px;
-    border-radius: 8px;
-}
 
-.edit form button {
-    height: 40px;
-    width: 97%;
-    border: none;
-    background-color: #28A745;
-    border-radius: 8px;
-    color: aliceblue;
-    cursor: pointer;
-}
 
 /* .table{
     position: relative;
@@ -153,4 +122,47 @@
 .nav p{
     font-size: 22px;
     color: aliceblue;
+}
+
+.edit-box{
+    width: 100%;
+    height: 50vh;
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.9s ease-in-out;
+}
+#edit form{
+    height: 360px;
+    width: 400px;
+    background-color: rgb(219, 219, 219);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+#edit form input{
+    height: 35px;
+    width: 98%;
+    border-radius: 8px;
+    border: 1px solid black;
+}
+#edit form textarea{
+    resize: none;
+}
+#edit form button{
+    height: 35px;
+    width: 98%;
+    border: none;
+    background-color: #28A745;
+    color: aliceblue;
+}
+.editshow{
+    transform: translateY(0vh);
+}
+.edithide{
+    transform: translateY(-60vh);
 }
