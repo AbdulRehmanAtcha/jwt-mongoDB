@@ -21,9 +21,10 @@ const Login = () => {
 
 
 
-  let { state, dispatch } = useContext(GlobalContext);  
+  let { state, dispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailHandler = (e) => {
     setEmail(e.target.value);
@@ -32,6 +33,7 @@ const Login = () => {
     setPassword(e.target.value);
   }
   const loginHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       let response = await axios.post(`${baseURL}/api/v1/login`, {
@@ -43,27 +45,38 @@ const Login = () => {
       dispatch({
         type: "USER_LOGIN",
         payload: null
-    })
+      })
+      setLoading(false);
       console.log("Login Successful", email);
-      alert("Login Successful");
+      // alert("Login Successful");
     }
     catch (e) {
       console.log("Error", e);
     }
   }
   return (
-    <body>
-      <div className="login">
-        <img src={drop} alt="Drop" />
-        <h2>LOG IN</h2>
-        <form onSubmit={loginHandler}>
-          <input type="email" placeholder='Email' name="email" onChange={emailHandler} autoComplete="on" />
-          <input type="password" placeholder='Password' onChange={passHandler} />
-          <button type='submit'>Login</button>
-        </form>
-        <h3>Don't Have An Account? <span><NavLink to="/signup">Click Here</NavLink></span></h3>
-      </div>
-    </body>
+    <>
+      {
+        (loading === true) ?
+          <div className="spinner-grow text-secondary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          :
+          <body>
+            <div className="login">
+              <img src={drop} alt="Drop" />
+              <h2>LOG IN</h2>
+              <form onSubmit={loginHandler}>
+                <input type="email" placeholder='Email' name="email" onChange={emailHandler} autoComplete="on" />
+                <input type="password" placeholder='Password' onChange={passHandler} />
+                <button type='submit'>Login</button>
+              </form>
+              <h3>Don't Have An Account? <span><NavLink to="/signup">Click Here</NavLink></span></h3>
+            </div>
+          </body>
+      }
+    </>
+
   )
 }
 

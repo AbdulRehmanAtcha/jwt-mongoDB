@@ -51,6 +51,8 @@ function App() {
         (state.isLogin === true) ?
           <Routes>
             <Route path='/' element={<Home/>} />
+            <Route path='/login'  element={<Login />} />
+            <Route path='*' element={<Home/>}/>
           </Routes>
           :
           null
@@ -59,7 +61,9 @@ function App() {
         (state.isLogin === false) ?
           <Routes>
             <Route path='/' element={<Login />} />
+            <Route path='/login'  element={<Login />} />
             <Route path='/signup' element={<Signup />} />
+            <Route path='*' element={<Login />}/>
           </Routes>
           :
           null
