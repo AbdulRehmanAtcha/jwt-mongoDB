@@ -244,6 +244,43 @@ app.use("/api/v1", (req, res, next) => {
     });
 });
 
+const gettingUser = async(req, res) => {
+    let _id = "";
+    if(req.params.id){
+        _id = req.params.id
+    }
+    else{
+        _id = req.body.token._id;
+    }
+
+    try {
+        const user = await userModel.findOne({ _id: _id }, ("firstName lastName -_id")
+
+        ).exec()
+        if(!user){
+            res.status(404);
+            res.send({});
+            return;
+        }
+        else{
+            res.status(200);
+            res.send({user});
+        }
+
+    }
+    catch(error){
+        console.log("Error", error)
+        res.status(500);
+        res.send({
+            message: "Error"
+        });
+    }
+}
+
+app.get("/api/v1/profile",  gettingUser)
+
+app.get("/api/v1/profile:id", gettingUser)
+
 app.post('/api/v1/product', (req, res) => {
     const body = req.body;
 

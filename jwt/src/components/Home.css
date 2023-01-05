@@ -166,3 +166,11 @@
 .edithide{
     transform: translateY(-60vh);
 }
+
+.user{
+    margin-right: 20px;
+    background: transparent;
+    border: none;
+    color: aliceblue;
+    font-size: 22px;
+}

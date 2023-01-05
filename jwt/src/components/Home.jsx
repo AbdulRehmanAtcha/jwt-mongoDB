@@ -84,6 +84,7 @@ function Home() {
 
     useEffect(() => {
         allPosts();
+        // console.log(state.user)  
     }, [])
 
     const deletProduct = async (id) => {
@@ -173,6 +174,7 @@ function Home() {
                         <div className="nav fixed-top">
                             <p>Product Managing</p>
                             <div className="add-button">
+                                <button className='user'>{(state?.user?.user?.firstName === undefined)? state.user.email : state?.user?.user?.firstName + " "+ state?.user?.user?.lastName}</button>
                                 <form onSubmit={showAddBox}>
                                     <button type="submit button" className="btn btn-success">Add Product</button>
                                 </form>

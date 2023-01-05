@@ -20,16 +20,18 @@ else {
 
 function App() {
   let { state, dispatch } = useContext(GlobalContext);
+  
 
   useEffect(() => {
 
     const getHome = async () => {
       try {
-        let response = await axios.get(`${baseURL}/api/v1/products`, {
+        let response = await axios.get(`${baseURL}/api/v1/profile`, {
           withCredentials: true
         })
         dispatch({
-          type: "USER_LOGIN"
+          type: "USER_LOGIN",
+          payload: response.data
         })
         console.log("Yes Login");
       }

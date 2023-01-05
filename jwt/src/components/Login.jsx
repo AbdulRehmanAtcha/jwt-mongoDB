@@ -22,6 +22,7 @@ const Login = () => {
 
 
   let { state, dispatch } = useContext(GlobalContext);
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,13 +45,16 @@ const Login = () => {
       })
       dispatch({
         type: "USER_LOGIN",
-        payload: null
+        payload: response.data.profile
       })
+      // console.log(state)
       setLoading(false);
-      console.log("Login Successful", email);
+      console.log("Login Successful");
       // alert("Login Successful");
     }
     catch (e) {
+      setLoading(false);
+
       console.log("Error", e);
     }
   }
