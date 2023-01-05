@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 
@@ -47,6 +47,7 @@ let productSchema = new mongoose.Schema({
     name: { type: String, required: true },
     price: Number,
     description: String,
+    owner: {type: mongoose.ObjectId, required: true},
     createdOn: { type: Date, default: Date.now }
 });
 const productModel = mongoose.model('products', productSchema);
@@ -305,6 +306,7 @@ app.post('/api/v1/product', (req, res) => {
         name: body.name,
         price: body.price,
         description: body.description,
+        owner: new mongoose.Types.ObjectId(body.token._id),
     },
         (err, saved) => {
             if (!err) {
@@ -328,8 +330,9 @@ app.post('/api/v1/product', (req, res) => {
 })
 
 app.get('/api/v1/products', async (req, res) => {
+    const userId = new mongoose.Types.ObjectId(req.body.token._id);
     try {
-        const data = await productModel.find({})
+        const data = await productModel.find({owner: userId})
             // .select({description: 0, name: 0}) // projection
             .sort({ _id: -1 })
             .exec();
