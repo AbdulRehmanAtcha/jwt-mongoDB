@@ -9,6 +9,7 @@ import {
     stringToHash,
     varifyHash,
 } from "bcrypt-inzi";
+import { error } from 'console';
 
 const SECRET = process.env.SECRET || "topsecret";
 const app = express();
@@ -47,7 +48,7 @@ let productSchema = new mongoose.Schema({
     name: { type: String, required: true },
     price: Number,
     description: String,
-    owner: {type: mongoose.ObjectId, required: true},
+    owner: { type: mongoose.ObjectId, required: true },
     createdOn: { type: Date, default: Date.now }
 });
 const productModel = mongoose.model('products', productSchema);
@@ -208,6 +209,8 @@ app.post("/api/v1/logout", (req, res) => {
     res.send({ message: "Logout successful" });
 })
 
+
+
 app.use("/api/v1", (req, res, next) => {
     console.log("req.cookies: ", req.cookies);
 
@@ -245,12 +248,12 @@ app.use("/api/v1", (req, res, next) => {
     });
 });
 
-const gettingUser = async(req, res) => {
+const gettingUser = async (req, res) => {
     let _id = "";
-    if(req.params.id){
+    if (req.params.id) {
         _id = req.params.id
     }
-    else{
+    else {
         _id = req.body.token._id;
     }
 
@@ -258,18 +261,18 @@ const gettingUser = async(req, res) => {
         const user = await userModel.findOne({ _id: _id }, ("firstName lastName -_id")
 
         ).exec()
-        if(!user){
+        if (!user) {
             res.status(404);
             res.send({});
             return;
         }
-        else{
+        else {
             res.status(200);
-            res.send({user});
+            res.send({ user });
         }
 
     }
-    catch(error){
+    catch (error) {
         console.log("Error", error)
         res.status(500);
         res.send({
@@ -278,7 +281,43 @@ const gettingUser = async(req, res) => {
     }
 }
 
-app.get("/api/v1/profile",  gettingUser)
+app.post('/api/v1/changePassword', async (req, res) => {
+
+    try {
+        const body = req.body;
+        const oldPassword = body.oldPassword;
+        const newPassword = body.newPassword;
+        const _id = req.body.token._id
+
+        // check if user exist
+        const user = await userModel.findOne(
+            { _id: _id },
+            "password",
+        ).exec()
+
+        if (!user) throw new Error("User not found")
+
+        const isMatched = await varifyHash(oldPassword, user.password)
+        if (!isMatched) throw new Error("Password Did'nt Match")
+
+        const newHash = await stringToHash(newPassword);
+
+        await userModel.updateOne({ _id: _id }, { password: newHash }).exec()
+
+        // success
+        res.send({
+            message: "Password Change!",
+        });
+        return;
+
+    } catch (error) {
+        console.log("error: ", error);
+        res.status(500).send()
+    }
+
+})
+
+app.get("/api/v1/profile", gettingUser)
 
 app.get("/api/v1/profile:id", gettingUser)
 
@@ -332,7 +371,7 @@ app.post('/api/v1/product', (req, res) => {
 app.get('/api/v1/products', async (req, res) => {
     const userId = new mongoose.Types.ObjectId(req.body.token._id);
     try {
-        const data = await productModel.find({owner: userId})
+        const data = await productModel.find({ owner: userId })
             // .select({description: 0, name: 0}) // projection
             .sort({ _id: -1 })
             .exec();

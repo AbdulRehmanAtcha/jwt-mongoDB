@@ -9,6 +9,7 @@ import { GlobalContext } from './context/Context';
 import { useContext } from "react";
 import { useEffect } from 'react';
 import Home from './components/Home';
+import Change from './components/Change';
 
 let baseURL = "";
 if (window.location.href.split(":")[0] === "http") {
@@ -49,11 +50,13 @@ function App() {
 
   return (
     <body>
+      
       {
         (state.isLogin === true) ?
           <Routes>
             <Route path='/' element={<Home/>} />
             <Route path='/login'  element={<Login />} />
+            <Route path='/changePassword'  element={<Change />} />
             <Route path='*' element={<Home/>}/>
           </Routes>
           :

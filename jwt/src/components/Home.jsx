@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Home.css';
 import { useContext } from "react";
 import { GlobalContext } from '../context/Context'
+import { Link } from 'react-router-dom';
 
 let baseURL = "";
 if (window.location.href.split(":")[0] === "http") {
@@ -178,6 +179,7 @@ function Home() {
                                 <form onSubmit={showAddBox}>
                                     <button type="submit button" className="btn btn-success">Add Product</button>
                                 </form>
+                                <Link to='/changePassword'><button className="btn btn-success">Change Password</button></Link>
                                 <button type="submit button" onClick={logoutHandler} className="btn btn-danger">Logout</button>
                             </div>
                         </div>
