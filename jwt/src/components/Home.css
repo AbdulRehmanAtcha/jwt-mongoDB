@@ -133,16 +133,15 @@
     align-items: center;
     transition: transform 0.9s ease-in-out;
 }
-#edit form{
-    height: 360px;
-    width: 400px;
-    background-color: rgb(219, 219, 219);
+#edit form {
+    position: relative;
+    background-color: #dbdbdb;
     border-radius: 8px;
-    display: flex;
     flex-direction: column;
+    height: 360px;
     row-gap: 8px;
-    justify-content: center;
-    align-items: center;
+    width: 400px;
+    top: 103px;
 }
 #edit form input{
     height: 35px;
